@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://resources/floor.tres" type="TileSet" id=1]
 [ext_resource path="res://resources/normal_decoration_tile.tres" type="TileSet" id=2]
 [ext_resource path="res://resources/smal_decoration_tile.tres" type="TileSet" id=3]
 [ext_resource path="res://scenes/env/Background.tscn" type="PackedScene" id=4]
 [ext_resource path="res://scenes/env/Mask.tscn" type="PackedScene" id=5]
+[ext_resource path="res://scenes/player/Player.tscn" type="PackedScene" id=6]
 
 [node name="Level" type="Node2D"]
 
@@ -32,3 +33,8 @@ tile_data = PoolIntArray( 327680, 2, 0, 327681, 0, 0, 327684, 0, 0, 327687, 0, 0
 _layerSpeeds = PoolIntArray(  )
 
 [node name="Mask" parent="." instance=ExtResource( 5 )]
+visible = false
+
+[node name="Player" parent="." instance=ExtResource( 6 )]
+position = Vector2( 123, 4 )
+_speed = 76

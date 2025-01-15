@@ -10,6 +10,7 @@
 [node name="Background" type="ParallaxBackground"]
 script = ExtResource( 5 )
 _canProcess = false
+_layerSpeeds = PoolIntArray( 20, 15, 10, 5 )
 
 [node name="Layer4" type="ParallaxLayer" parent="."]
 motion_mirroring = Vector2( 320, 180 )

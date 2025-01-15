@@ -1,11 +1,12 @@
 using Godot;
-using System;
 using System.Collections.Generic;
+// ReSharper disable All
+
 
 public class Background : ParallaxBackground
 {
     [Export] private bool _canProcess = true; // Nomenclatura mais clara para variáveis privadas
-    [Export] private List<int> _layerSpeeds = new List<int>(); // Usando List<float> ao invés de Array para maior controle e segurança
+    [Export] private List<int> _layerSpeeds = new List<int>(); // Usando List<int> ao invés de Array para maior controle e segurança
 
     private List<ParallaxLayer> _parallaxLayers = new List<ParallaxLayer>();
 
