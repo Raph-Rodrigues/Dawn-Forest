@@ -5,11 +5,12 @@ using Godot;
 public class Player : KinematicBody2D
 {
     private PlayerTexture _playerSprite;
-    private RayCast2D _wallRay;
+    public RayCast2D _wallRay;
+    private PlayerStats stats;
     
     private Vector2 _velocity;
 
-    private int direction = 1;
+    public int direction = 1;
     private int _jumpCount = 0;
     
     public bool Landing = false;
@@ -17,6 +18,8 @@ public class Player : KinematicBody2D
     public bool Defending = false;
     public bool Crouching = false;
     public bool OnWall = false;
+    public bool dead = false;
+    public bool onHit = false;
 
     private bool _canTrackInput = true;
     private bool _notOnWall = true;
@@ -33,6 +36,7 @@ public class Player : KinematicBody2D
     {
         _playerSprite = GetNode<PlayerTexture>("Texture");
         _wallRay = GetNode<RayCast2D>("WallRay");
+        stats = GetNode<PlayerStats>("Stats");
     }
 
     public override void _PhysicsProcess(float delta)
@@ -103,11 +107,13 @@ public class Player : KinematicBody2D
         if (Input.IsActionPressed("defend") && IsOnFloor() && !Crouching)
         {
             Defending = true;
+            stats.shielding= true;
             _canTrackInput = false;
         } else if (!Crouching)
         {
             Defending = false;
             _canTrackInput = true;
+            stats.shielding = false;
             _playerSprite.shieldOff = true;
         }
     }
@@ -117,10 +123,12 @@ public class Player : KinematicBody2D
         if (Input.IsActionPressed("crouch") && IsOnFloor() && !Defending)
         {
             Crouching = true;
+            stats.shielding = false;
             _canTrackInput = false;
         } else if (!Defending)
         {
             Crouching = false;
+            stats.shielding = false;
             _canTrackInput = true;
             _playerSprite.crouchOff = true;
         }
@@ -146,7 +154,7 @@ public class Player : KinematicBody2D
         }
     }
 
-    private bool NextToWall()
+    public bool NextToWall()
     {
         if (_wallRay.IsColliding() && !IsOnFloor())
         {

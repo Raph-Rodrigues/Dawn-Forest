@@ -5,11 +5,17 @@ using Godot;
 
 public class PlayerTexture : Sprite
 {
+    [Signal]
+    public delegate void GameOver();
+    
     [Export] private NodePath _animationPath;
     private AnimationPlayer _animation;
 
     [Export] private NodePath _playerPath;
     private Player _player;
+
+    [Export] private NodePath collisionPath;
+    private CollisionShape2D collisionAttack;
 
     public bool normalAttack = false;
     private string suffix = "Right";
@@ -22,12 +28,17 @@ public class PlayerTexture : Sprite
     {
         _animation = GetNode<AnimationPlayer>(_animationPath);
         _player = GetNode<Player>(_playerPath);
+        collisionAttack = GetNode<CollisionShape2D>(collisionPath);
     }
 
     public void Animate(Vector2 direction)
     {
         VerifyPosition(direction);
-        if (_player.Attacking || _player.Defending || _player.Crouching)
+        if (_player.onHit || _player.dead)
+        {
+            HitBehavior();
+        }
+        else if (_player.Attacking || _player.Defending || _player.Crouching || _player.Attacking || _player.NextToWall())
         {
             ActionBehavior();
         }
@@ -51,17 +62,41 @@ public class PlayerTexture : Sprite
         {
             FlipH = false;
             suffix = "Right";
+            _player.direction = -1;
+            Position = Vector2.Zero;
+            _player._wallRay.CastTo = new Vector2(5.5f, 0);
         }
         else if (direction.x < 0)
         {
             FlipH = true;
             suffix = "Left";
+            _player.direction = 1;
+            Position = new Vector2(-2, 0);
+            _player._wallRay.CastTo = new Vector2(-7.5f, 0);
+        }
+    }
+
+    private void HitBehavior()
+    {
+        _player.SetPhysicsProcess(false);
+        collisionAttack.SetDeferred("disabled", true);
+        if (_player.dead)
+        {
+            _animation.Play("Dead");
+        }
+        else if (_player.onHit)
+        {
+            _animation.Play("Hit");
         }
     }
     
     private void ActionBehavior()
     {
-        if (_player.Attacking && normalAttack)
+        if (_player.NextToWall())
+        {
+            _animation.Play("WallSlide");
+        }
+        else if (_player.Attacking && normalAttack)
         {
             _animation.Play("Attack" + suffix);
         } else if (_player.Defending && shieldOff)
@@ -108,6 +143,22 @@ public class PlayerTexture : Sprite
             
             case "AttackRight":
                 _player.Attacking = false;
+                break;
+            case "Hit":
+                _player.onHit = false;
+                _player.SetPhysicsProcess(true);
+                if (_player.Defending)
+                {
+                    _animation.Play("Shield");
+                }
+
+                if (_player.Crouching)
+                {
+                    _animation.Play("Crouch");
+                }
+                break;
+            case "Dead":
+                EmitSignal(nameof(GameOver));
                 break;
         }
     }

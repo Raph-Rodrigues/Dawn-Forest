@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://resources/floor.tres" type="TileSet" id=1]
 [ext_resource path="res://resources/normal_decoration_tile.tres" type="TileSet" id=2]
@@ -6,8 +6,19 @@
 [ext_resource path="res://scenes/env/Background.tscn" type="PackedScene" id=4]
 [ext_resource path="res://scenes/env/Mask.tscn" type="PackedScene" id=5]
 [ext_resource path="res://scenes/player/Player.tscn" type="PackedScene" id=6]
+[ext_resource path="res://scripts/management/Level.cs" type="Script" id=7]
+
+[sub_resource type="Environment" id=1]
+background_mode = 4
+glow_enabled = true
+glow_intensity = 1.52
+glow_strength = 0.95
+glow_hdr_threshold = 1.26
+glow_high_quality = true
 
 [node name="Level" type="Node2D"]
+position = Vector2( 8, 0 )
+script = ExtResource( 7 )
 
 [node name="LevelDesign" type="Node2D" parent="."]
 
@@ -30,11 +41,12 @@ format = 1
 tile_data = PoolIntArray( 327680, 2, 0, 327681, 0, 0, 327684, 0, 0, 327687, 0, 0, 327690, 2, 0, 327692, 2, 0, 327694, 1, 0, 327698, 1, 0, 720919, 1, 0, 720920, 2, 0, 720922, 2, 0, 720978, 2, 0, 720980, 0, 0, 720981, 1, 0, 720982, 1, 0, 720984, 0, 0, 983100, 0, 0, 983101, 1, 0, 983105, 2, 0, 983106, 0, 0, 983107, 1, 0, 983108, 2, 0, 983110, 2, 0, 983111, 0, 0, 983116, 2, 0, 1114144, 0, 0, 1114145, 1, 0, 1114146, 1, 0, 1114147, 0, 0, 1114148, 1, 0, 1114149, 0, 0, 1114151, 2, 0, 1114153, 2, 0, 1114154, 2, 0, 1114155, 2, 0, 1114157, 1, 0, 1114159, 1, 0, 1114160, 0, 0, 1114163, 2, 0, 1114166, 2, 0, 1114167, 0, 0, 1114169, 2, 0, 1114204, 2, 0, 1114206, 0, 0, 1114207, 2, 0, 1114209, 2, 0, 1114212, 2, 0, 1114213, 1, 0, 1114214, 1, 0, 1114215, 0, 0, 1114216, 1, 0, 1114217, 2, 0, 1114220, 2, 0, 1114221, 0, 0, 1507389, 2, 0, 1507392, 1, 0, 1507394, 1, 0, 1507395, 2, 0, 1507396, 1, 0, 1507397, 0, 0, 1507401, 2, 0, 1507403, 0, 0, 1507405, 2, 0 )
 
 [node name="Background" parent="." instance=ExtResource( 4 )]
-_layerSpeeds = PoolIntArray(  )
 
 [node name="Mask" parent="." instance=ExtResource( 5 )]
-visible = false
 
 [node name="Player" parent="." instance=ExtResource( 6 )]
-position = Vector2( 123, 4 )
+position = Vector2( 49, 68 )
 _speed = 76
+
+[node name="Enviroment" type="WorldEnvironment" parent="."]
+environment = SubResource( 1 )
